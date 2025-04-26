@@ -27,5 +27,11 @@ dataset <- na.omit(dataset)
 
 colnames(dataset) <- c("age", "education", "sex", "country", "child_suffers_mom", "job_scarcity")
 
+#type conversion
+dataset$sex <- as_factor(dataset$sex)
+dataset$education <- as_factor(dataset$education)
+dataset$country <- as_factor(dataset$country) 
+dataset$age <- as.numeric(dataset$age) 
+
 #output data to rdata
 saveRDS(dataset, "C:/Users/smcnair1/Desktop/MWF_FINAL/dynamic_analysis/data/dataset.rds")
