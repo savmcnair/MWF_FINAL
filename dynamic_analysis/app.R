@@ -8,28 +8,50 @@
 #
 
 library(shiny)
+library(ggplot2) 
+library(dplyr)
+library(broom)
+library(rmarkdown)
+library(shinydashboard)
+
+evs <- readRDS("data/dataset.rds")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+  titlePanel("European Values Survey Data"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("country", "Country:", choices = c("Overall", unique(evs$country))),
+      selectInput("outcome", "Outcome:", choices = c("child_suffers_mom", "job_scarcity")),
+      checkboxGroupInput("controls", "Controls:", choices = c("sex", "education")),
+      numericInput("poly", "Age polynomial:", value = 1, min = 1, max = 5),
+      downloadButton("report", "Generate Report")
+    ),
+    
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Overview",
+                 h3("EVS Data Explorer"),
+                 p("This app explores the European Values Study data."),
+                 p("Use the inputs on the left to filter and model the data."),
+                 p("Navigate to the Exploration tab for graphs, and Regression for statistical modeling.")
         ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
+        
+        tabPanel("Exploration",
+                 plotOutput("outcomePlot"),
+                 plotOutput("agePlot"),
+                 plotOutput("educationPlot"),
+                 plotOutput("sexPlot")
+        ),
+        
+        tabPanel("Regression",
+                 tableOutput("regressionTable"),
+                 plotOutput("residPlot")
         )
+      )
     )
+  )
 )
 
 # Define server logic required to draw a histogram
