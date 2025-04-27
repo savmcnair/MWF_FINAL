@@ -25,12 +25,35 @@ if (params$country != "Overall") {
 }
 ```
 
-outcome distributions
+outcome distribution
 ```{r}
 ggplot(evs, aes_string(x = params$outcome)) +
   geom_bar(fill = "steelblue") +
   labs(title = "Distribution of Selected Outcome", x = NULL, y = "Count")
 ```
+
+age distribution
+```{r}
+ggplot(evs, aes(x = age)) +
+  geom_histogram(binwidth = 5, fill = "darkgreen", color = "white") +
+  labs(title = "Age Distribution", x = "Age", y = "Count")
+```
+
+education distribution
+```{r}
+ggplot(evs, aes(x = education)) +
+  geom_bar(fill = "purple") +
+  labs(title = "Education Distribution", x = "Education Level", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+sex dist
+```{r}
+ggplot(evs, aes(x = sex)) +
+  geom_bar(fill = "orange") +
+  labs(title = "Sex Distribution", x = "Sex", y = "Count")
+```
+
 
 regression model
 ```{r}
