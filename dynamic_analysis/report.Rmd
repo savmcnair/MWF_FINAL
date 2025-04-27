@@ -1,0 +1,62 @@
+---
+title: "report"
+author: "Savannah McNair"
+date: "2025-04-26"
+output: html_document
+params:
+  country: "Overall"
+  outcome: "child_suffers_mom"
+  controls: ["sex"]
+  poly: 1
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(broom)
+```
+
+load and filter data
+```{r}
+evs <- readRDS("data/dataset.rds")
+if (params$country != "Overall") {
+  evs <- evs %>% filter(country == params$country)
+}
+```
+
+outcome distributions
+```{r}
+ggplot(evs, aes_string(x = params$outcome)) +
+  geom_bar(fill = "steelblue") +
+  labs(title = "Distribution of Selected Outcome", x = NULL, y = "Count")
+```
+
+regression model
+```{r}
+predictors <- c()
+if ("sex" %in% params$controls) predictors <- c(predictors, "sex")
+if ("education" %in% params$controls) predictors <- c(predictors, "education")
+age_terms <- paste0("I(age^", 1:params$poly, ")")
+predictors <- c(predictors, age_terms)
+
+formula <- as.formula(paste(params$outcome, "~", paste(predictors, collapse = " + ")))
+
+# Fit model
+model <- lm(formula, data = evs)
+
+# Show tidy table
+broom::tidy(model)
+```
+
+predictions/residuals plot
+```{r}
+preds <- predict(model)
+resids <- resid(model)
+
+ggplot(data.frame(preds, resids), aes(x = preds, y = resids)) +
+  geom_point(color = "red") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "Residuals vs Predicted", x = "Predicted", y = "Residuals")
+```
+
