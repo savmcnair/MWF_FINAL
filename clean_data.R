@@ -31,6 +31,8 @@ colnames(dataset) <- c("age", "education", "sex", "country", "child_suffers_mom"
 dataset$sex <- as_factor(dataset$sex)
 dataset$education <- as_factor(dataset$education)
 dataset$country <- as_factor(dataset$country) 
+dataset$child_suffers_mom <- as_factor(dataset$child_suffers_mom)
+dataset$job_scarcity <- as_factor(dataset$job_scarcity)
 dataset$age <- as.numeric(dataset$age) 
 
 #output data to rdata
