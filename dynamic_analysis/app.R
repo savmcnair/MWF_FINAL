@@ -98,6 +98,8 @@ server <- function(input, output) {
   reg_model <- reactive({
     data <- filtered_data()
     
+    data[[input$outcome]] <- as.numeric(data[[input$outcome]])
+    
     predictors <- c()  
     
     if ("sex" %in% input$controls) {
