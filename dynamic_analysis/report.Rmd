@@ -57,6 +57,8 @@ ggplot(evs, aes(x = sex)) +
 
 regression model
 ```{r}
+evs[[params$outcome]] <- as.numeric(evs[[params$outcome]])
+
 predictors <- c()
 if ("sex" %in% params$controls) predictors <- c(predictors, "sex")
 if ("education" %in% params$controls) predictors <- c(predictors, "education")
@@ -65,10 +67,8 @@ predictors <- c(predictors, age_terms)
 
 formula <- as.formula(paste(params$outcome, "~", paste(predictors, collapse = " + ")))
 
-# Fit model
 model <- lm(formula, data = evs)
 
-# Show tidy table
 broom::tidy(model)
 ```
 
